@@ -25,7 +25,6 @@ import com.patientcare.patient.entity.Claims;
 import com.patientcare.patient.entity.Drug;
 import com.patientcare.patient.entity.User;
 import com.patientcare.patient.model.ClaimsRequest;
-import com.patientcare.patient.model.DrugNCount;
 import com.patientcare.patient.model.HistoryResp;
 import com.patientcare.patient.service.ClaimsService;
 import com.patientcare.patient.service.DrugService;
@@ -63,15 +62,15 @@ public class UserController {
 		claims = claimsService.getClaimsByUserid(user.getUserid());
 		drugs = drugService.getDrugByUserid(user.getUserid());
 		List<HistoryResp> response = new ArrayList<HistoryResp>();
-		claims.forEach((clamisRecord) -> {
+		claims.forEach((claimsRecord) -> {
 			HistoryResp eachResponse = new HistoryResp();
-			eachResponse.setClaimsid(clamisRecord.getClaimsid());
-			eachResponse.setClaimsdate(clamisRecord.getClaimsdate());
-			eachResponse.setOpioidflag(clamisRecord.getOpioidflag());
-			eachResponse.setStatus(clamisRecord.getStatus());
+			eachResponse.setClaimsid(claimsRecord.getClaimsid());
+			eachResponse.setClaimsdate(claimsRecord.getClaimsdate());
+			eachResponse.setOpioidflag(claimsRecord.getOpioidflag());
+			eachResponse.setStatus(claimsRecord.getStatus());
 			eachResponse.druglist = new ArrayList<Drug>();
 			drugs.forEach((drugRecord) -> {
-				if (drugRecord.getClaimsid() == clamisRecord.getClaimsid()) {
+				if (drugRecord.getClaimsid() == claimsRecord.getClaimsid()) {
 					eachResponse.druglist.add(drugRecord);
 				}
 			});
@@ -83,7 +82,7 @@ public class UserController {
 
 	@RequestMapping(value = { "/claimsRequest" }, method = RequestMethod.POST)
 	public ResponseEntity<String> claimsRequest(@RequestBody ClaimsRequest request) {
-		if (callOpenAPI(request.getDrugs())) {
+		if (callOpenAPI(request.getDrug())) {
 			return new ResponseEntity<String>("survey needed", HttpStatus.OK);
 		} else {
 			User user = userService.getUserByUsername(request.getUsername());
@@ -91,21 +90,17 @@ public class UserController {
 	        Date date = new Date(millis);
 			Claims claims = new Claims(user.getUserid(), "PENDING", "N", date, 0);
 			Integer claimsid = claimsService.addClaims(claims);
-			for (int i=0; i < request.getDrugs().length; i++) {
-				Drug drug = new Drug(user.getUserid(), claimsid, request.getDrugs()[i].getDrug(), request.getDrugs()[i].getCount());
-				drugService.addDrug(drug);
-			}
+			Drug drug = new Drug(user.getUserid(), claimsid, request.getDrug(), request.getCount());
+			drugService.addDrug(drug);
 			return new ResponseEntity<String>("request added", HttpStatus.OK);
 		}
 
 	}
 	
-	public Boolean callOpenAPI(DrugNCount[] druglist) {
-		for (int i = 0; i < druglist.length; i++) {
-			String rxcui = getrxcui(druglist[i].getDrug());
-			if (hasOpioid(rxcui)) {
-				return true;
-			}
+	public Boolean callOpenAPI(String drug) {
+		String rxcui = getrxcui(drug);
+		if (hasOpioid(rxcui)) {
+			return true;
 		}
 		return false;
 	}

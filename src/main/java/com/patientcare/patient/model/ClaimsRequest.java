@@ -6,7 +6,8 @@ public class ClaimsRequest {
 	
 	private String username;
 	private Date date;
-	private DrugNCount[] drugs;
+	private String drug;
+	private Integer count;
 	public String getUsername() {
 		return username;
 	}
@@ -19,12 +20,17 @@ public class ClaimsRequest {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	public DrugNCount[] getDrugs() {
-		return drugs;
+	public String getDrug() {
+		return drug;
 	}
-	public void setDrugs(DrugNCount[] drugs) {
-		this.drugs = drugs;
+	public void setDrug(String drug) {
+		this.drug = drug;
 	}
-	
+	public Integer getCount() {
+		return count;
+	}
+	public void setCount(Integer count) {
+		this.count = count;
+	}
 
 }
