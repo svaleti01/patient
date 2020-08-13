@@ -77,6 +77,7 @@ public class UserController {
 			response.add(eachResponse);
 		});
 
+		System.out.println(response);
 		return new ResponseEntity<List<HistoryResp>>(response, HttpStatus.OK);
 	}
 

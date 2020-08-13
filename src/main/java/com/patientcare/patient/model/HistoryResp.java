@@ -18,21 +18,40 @@ public class HistoryResp {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Integer getClaimsid() {
+		return claimsid;
+	}
 
 	public void setClaimsid(Integer claimsid) {
 		this.claimsid = claimsid;
+	}
+
+	public String getStatus() {
+		return status;
 	}
 
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	public String getOpioidflag() {
+		return opioidflag;
+	}
+
 	public void setOpioidflag(String opioidflag) {
 		this.opioidflag = opioidflag;
 	}
 
+	public Date getClaimsdate() {
+		return claimsdate;
+	}
+
 	public void setClaimsdate(Date claimsdate) {
 		this.claimsdate = claimsdate;
+	}
+
+	public List<Drug> getDruglist() {
+		return druglist;
 	}
 
 	public void setDruglist(List<Drug> druglist) {
